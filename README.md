@@ -1,7 +1,16 @@
-# Здесь будет ваш проект на Реакте с авторизацией и регистрацией
+# Project: Mesto-react
+Demo on github Pages: https://alisakrasnopolina.github.io/mesto-react-auth
 
-Используйте ваши предыдущие наработки по проекту Mesto. Это может быть работа 11-го спринта или его улучшенная версия после 2-х последних спринтов. 
+### Project description
 
-Все запросы на авторизацию, регистрацию и проверку токена должны работать через сервис `https://auth.nomoreparties.co`. Остальные запросы, не относящиеся к этой проектной работе могут быть к бэкенду из предыдущих спринтов.
+Educational project Yandex Practicum - a one-page site with adaptive design, profile on a fictional social network.
 
-Успехов!
+Implemented authorization and registration, opening and closing the form to change the profile name and description by clicking on certain buttons, like and delete the card, the ability to add your own cards after filling out the form by clicking on the create button.
+
+**Figma**
+
+* [Ссылка на макет в Figma](https://www.figma.com/file/5H3gsn5lIGPwzBPby9jAOo/Sprint-14-RU?node-id=0%3A1)
+
+**Tools**
+
+React | CSS3 | JavaScript | BEM / file structure according to Nested BEM | adaptive layout | JSX
