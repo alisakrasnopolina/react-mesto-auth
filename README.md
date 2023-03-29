@@ -1,4 +1,4 @@
-# Project: Mesto-react
+# Project: Mesto-react-auth
 Demo on github Pages: https://alisakrasnopolina.github.io/mesto-react-auth
 
 ### Project description
