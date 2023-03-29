@@ -12,7 +12,7 @@ import Register from './Register';
 import ProtectedRoute from './ProtectedRoute';
 import InfoTooltip from './InfoTooltip';
 import AddPlacePopup from './AddPlacePopup'
-import * as Auth from './Auth';
+import * as Auth from '../utils/Auth';
 import api from '../utils/Api';
 import { CurrentUserContext } from '../contexts/CurrentUserContext'
 
@@ -21,6 +21,7 @@ function App(props) {
   const [isEditAvatarPopupOpen, setEditAvatarPopupOpen] = React.useState(false);
   const [isAddPlacePopupOpen, setAddPlacePopupOpen] = React.useState(false);
   const [isInfoTooltip, setInfoTooltip] = React.useState(false);
+  const [titleInfoTooltip, setTitleInfoTooltip] = React.useState('');
   const [isRegister, setRegister] = React.useState(false);
   const [selectedCard, setSelectedCard] = React.useState({});
   const [currentUser, setCurrentUser] = React.useState({});
@@ -62,11 +63,6 @@ function App(props) {
 
   function handleAddPlaceClick() {
     setAddPlacePopupOpen(true);
-  }
-
-  function handleInfoTooltipClick(data) {
-    setRegister(data);
-    setInfoTooltip(true);
   }
 
   function closeAllPopups() {
@@ -137,14 +133,54 @@ function App(props) {
     }
    } 
 
-  const handleLogin = (userData) => {
-    setUserEmail(userData)
-    setLoggedIn(true);
-  } 
-
-  const handleSignOut = () => {
+  function handleSignOut(){
+    localStorage.removeItem('token');
     setLoggedIn(false);
-  } 
+    navigate("/sign-in", {replace: true});
+  }
+
+  function handleChangeTitle(isReg) {
+    if (isReg) {
+      setTitleInfoTooltip('Вы успешно зарегистрировались!')
+    } else {
+      setTitleInfoTooltip('Что-то пошло не так! Попробуйте ещё раз.')
+    }
+  }
+
+  function handleLogin(email, password) {
+    Auth.authorization(email, password)
+      .then((data) => {
+        if (data.token){
+          const userData = {
+            email: email
+          }
+          setUserEmail(userData)
+          setLoggedIn(true);
+          navigate('/', {replace: true});
+        }
+      })
+      .catch(err => {
+        console.log(err)
+        setInfoTooltip(true);
+        setRegister(false);
+        handleChangeTitle(false);
+      });
+  }
+
+  function handleRegister(email, password) {
+    Auth.register(email, password)
+      .then((res) => {
+        setRegister(true)
+        handleChangeTitle(true)
+        setInfoTooltip(true);
+      })
+      .catch((err) => {
+        setRegister(false)
+        handleChangeTitle(false)
+        setInfoTooltip(true);
+        console.log(err)
+      });
+  }
 
   return (
     <div>
@@ -153,7 +189,7 @@ function App(props) {
         <Route path="/" element={
           <ProtectedRoute loggedIn={loggedIn} element={
             <CurrentUserContext.Provider value={currentUser}>
-              <Header userData={userEmail.email} loggedIn={loggedIn} handleSignOut={handleSignOut}/>
+              <Header userData={userEmail.email} loggedIn={loggedIn} onSignOut={handleSignOut}/>
               <Main
                 onEditProfile = {handleEditProfileClick} 
                 onEditAvatar = {handleEditAvatarClick} 
@@ -176,26 +212,23 @@ function App(props) {
                 card={selectedCard} 
                 onClose={closeAllPopups}
               />
-              <InfoTooltip
-                onClose={closeAllPopups}
-              />
             </CurrentUserContext.Provider> 
           }/>
         }/>
         <Route path="/sign-up" element={
           <>
             <Header title="Войти" loggedIn={loggedIn} path={'/sign-in'}/>
-            <Register onRegister = {handleInfoTooltipClick} />
-            <InfoTooltip onClose={closeAllPopups} isOpen={isInfoTooltip} isRegister={isRegister}/>
+            <Register onRegister={handleRegister} />
           </>
         }/>
         <Route path="/sign-in" element={
           <>
             <Header title="Регистрация" loggedIn={loggedIn} path={'/sign-up'}/>
-            <Login handleLogin={handleLogin} />
+            <Login onLogin={handleLogin}/>
           </>
         }/>
       </Routes>
+      <InfoTooltip onClose={closeAllPopups} isOpen={isInfoTooltip} isRegister={isRegister} title={titleInfoTooltip}/>
   </div>
   );
 }

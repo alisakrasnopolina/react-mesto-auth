@@ -1,5 +1,12 @@
 import React from 'react';
 
+function getResponse(res) {
+  if (!res.ok) {
+    return Promise.reject(`Ошибка: ${res.status}`);
+  }
+  return res.json();
+}
+
 export const BASE_URL = 'https://auth.nomoreparties.co';
 
 export const register = (email, password) => {
@@ -14,19 +21,11 @@ export const register = (email, password) => {
       password: password
     })
   })
-  .then((response) => {
-    try {
-      if (response.status === 201){
-        return response.json();
-      }
-    } catch(evt){
-      return (evt)
-    }
-  })
+  .then((response) => getResponse(response))
   .then((res) => {
+    console.log(res)
     return res;
   })
-  .catch((err) => console.log(err));
 };  
 
 export const authorization = (email, password) => {
@@ -41,12 +40,11 @@ export const authorization = (email, password) => {
       password: password
     })
   })
-  .then(res => res.json())
+  .then((res) => getResponse(res))
   .then((data) => {
     localStorage.setItem('token', data.token);
     return data;
   })
-  .catch((err) => console.log(err));
 }; 
 
 export const getContent = (token) => {
@@ -58,6 +56,6 @@ export const getContent = (token) => {
       'Authorization': `Bearer ${token}`,
     }
   })
-  .then(res => res.json())
+  .then((res) => getResponse(res))
   .then(data => data)
 }

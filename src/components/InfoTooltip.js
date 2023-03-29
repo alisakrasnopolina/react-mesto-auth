@@ -21,7 +21,7 @@ function InfoTooltip(props) {
         <div className="popup__content popup__content_name_approve">
           <button type="button" className="popup__close hover" onClick={closePopup} aria-label="кнопка для закрытия попапа"></button>
           <img src={props.isRegister ? GoodLogo : BadLogo} alt="Логотип" className="popup__logo"/>
-          <h2 className="popup__title popup__title_name_approve">{props.isRegister ? 'Вы успешно зарегистрировались!' : 'Что-то пошло не так! Попробуйте ещё раз.'}</h2>
+          <h2 className="popup__title popup__title_name_approve">{props.title}</h2>
         </div>
       </div>
     </div>

@@ -1,6 +1,5 @@
 import React from 'react';
 import { Link } from  'react-router-dom'; 
-import * as Auth from './Auth';
 
 function Register(props) {
 
@@ -20,24 +19,14 @@ function Register(props) {
 
   const handleSubmit = (evt) => {
     evt.preventDefault();
-    Auth.register(formValue.email, formValue.password)
-      .then((res) => {
-        if (res) {
-          props.onRegister(true)
-        } else {
-          props.onRegister(false)
-        }
-      })
-      .catch((err) => {
-        console.log(err)
-      });
+    props.onRegister(formValue.email, formValue.password)
   }
 
   return(
     <main className="content">
       <section className="register">
         <h2 className="register__title">Регистрация</h2>
-        <form className="register__form" onSubmit={handleSubmit} noValidate>
+        <form className="register__form" onSubmit={handleSubmit}>
           <input 
             value={formValue.email}
             onChange={handleChange}
@@ -56,7 +45,7 @@ function Register(props) {
             onChange={handleChange}
             id="password-input" 
             name="password" 
-            type="text" 
+            type="password" 
             placeholder="Пароль" 
             className="register__input register__input_data_password" 
             required 

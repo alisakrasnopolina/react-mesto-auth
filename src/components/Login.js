@@ -1,6 +1,5 @@
 import React from 'react';
 import { useNavigate } from  'react-router-dom';
-import * as Auth from './Auth';
 
 function Login(props) {
 
@@ -8,7 +7,6 @@ function Login(props) {
     email: '',
     password: ''
   })
-  const [userData, setUserData] = React.useState({});
 
   const navigate = useNavigate();
 
@@ -20,33 +18,23 @@ function Login(props) {
       [name]: value
     });
   }
-  
+
   const handleSubmit = (evt) => {
     evt.preventDefault();
 
     if (!formValue.email || !formValue.password) {
       return;
     }
-    Auth.authorization(formValue.email, formValue.password)
-      .then((data) => {
-        if (data.token){
-          const userData = {
-            email: formValue.email
-          }
-          setUserData(userData)
-          setFormValue({email: '', password: ''});
-          props.handleLogin(userData);
-          navigate('/', {replace: true});
-        }
-      })
-      .catch(err => console.log(err));
+
+    props.onLogin(formValue.email, formValue.password);
+    setFormValue({email: '', password: ''});
   }
 
   return(
     <main className="content">
       <section className="register">
         <h2 className="register__title">Вход</h2>
-        <form className="register__form" onSubmit={handleSubmit} noValidate>
+        <form className="register__form" onSubmit={handleSubmit}>
           <input 
             value={formValue.email}
             onChange={handleChange}
@@ -65,7 +53,7 @@ function Login(props) {
             onChange={handleChange}
             id="password-input" 
             name="password" 
-            type="text" 
+            type="password" 
             placeholder="Пароль" 
             className="register__input register__input_data_password" 
             required 
